@@ -1,13 +1,28 @@
 package com.example.bt_code_nhom.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.bt_code_nhom.Adapter.AdapterCinema;
 import com.example.bt_code_nhom.R;
+import com.example.bt_code_nhom.cinema;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +30,9 @@ import com.example.bt_code_nhom.R;
  * create an instance of this fragment.
  */
 public class CinemaFragment extends Fragment {
+    private ListView lv;
+    private ArrayList<cinema> arrayList;
+    private AdapterCinema adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,9 +75,51 @@ public class CinemaFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cinema, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View mview = inflater.inflate(R.layout.fragment_cinema, container, false);
+        lv = mview.findViewById(R.id.lviewcinema);
+        arrayList = new ArrayList<>();
+        adapter = new AdapterCinema(getContext(), R.layout.layout_cinema, arrayList);
+        lv.setAdapter(adapter);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest("https://hungvubao.shop/servers/getrap.php",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("Response", response.toString());
+                        if (response != null) {
+                            try {
+                                for (int i = 0; i < response.length(); i++) {
+                                    JSONObject jsonObject = response.getJSONObject(i);
+                                    int ID = jsonObject.getInt("id");
+                                    String tenhinh = jsonObject.getString("hinhanh");
+                                    int hinhanh = getResources().getIdentifier(tenhinh, "drawable", getActivity().getPackageName());
+                                    String tenrap = jsonObject.getString("tenrap");
+                                    String diachi = jsonObject.getString("diachi");
+                                    String sdt = jsonObject.getString("sdt");
+
+                                    arrayList.add(new cinema(ID, hinhanh, tenrap, diachi, sdt));
+                                }
+                                adapter.notifyDataSetChanged();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.e("JSONException", e.getMessage());
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VolleyError", error.toString());
+                        error.printStackTrace();
+                    }
+                }
+        );
+        requestQueue.add(jsonArrayRequest);
+
+        return mview;
     }
+
 }
