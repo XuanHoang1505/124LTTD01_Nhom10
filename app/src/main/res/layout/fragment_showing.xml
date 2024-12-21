@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".Fragment.ShowingFragment">
+
+    <!-- RecyclerView for movie content -->
+
+    <!-- Button for navigation -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_moive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
+
+    <Button
+        android:id="@+id/btnXemTiep"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Xem tiếp >"
+        android:textColor="@color/orange"
+        android:background="@drawable/custom_button"
+        android:layout_marginTop="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nguyễn Xuân Hoàng - 22115053122214">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phan Minh Tài - 22115053122243">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hồ Trọng Ân - 22115053122201">
+        </TextView>
+    </LinearLayout>
+</LinearLayout>
